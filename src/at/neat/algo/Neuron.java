@@ -6,7 +6,9 @@ import java.util.HashMap;
 public class Neuron {
 
     protected NeuronType neuronType;
+
     protected ActivationFunctions activationFunction;
+    protected double alpha;
 
     protected ArrayList<Neuron> connectedNeuronsPrev;
 
@@ -70,6 +72,26 @@ public class Neuron {
 
             case BinaryStep:
                 return in>=0 ? 1 : 0;
+
+            // Fabian
+            case ELU:
+                return in<=0 ? alpha*(Math.pow(Math.E,in)-1) : in;
+
+            case SELU:
+                return in>=0 ? in : alpha*(Math.pow(Math.E,in)-1);
+
+            case ReLU:
+                return in<0 ? 0.01*in : in;
+
+            case PReLU:
+                return in<0 ? alpha*in : in;
+
+            case SiLU:
+                return in/(1+Math.pow(Math.E,-1*in));
+
+            case Gaussian:
+                return Math.pow(Math.E,-1*(in*in));
+            // Fabian Ende
 
             default:
                 return 0.0d;

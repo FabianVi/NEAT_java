@@ -4,6 +4,7 @@ public enum ActivationFunctions { // see Notion (Java NEAT implementation) i.e. 
     // General AF
     Identity,
     BinaryStep,
+
     Sigmoid,
     TanH, // Hyperbolic tangent
     ReLU, // Rectified Liear Unit
