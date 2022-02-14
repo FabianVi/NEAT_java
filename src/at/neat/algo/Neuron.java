@@ -73,14 +73,28 @@ public class Neuron {
             case BinaryStep:
                 return in>=0 ? 1 : 0;
 
-            // Fabian
+            case Sigmoid:
+                return 1/(1+Math.pow(Math.E,in*-1));
+
+            case TanH:
+                return (Math.pow(Math.E,in) - Math.pow(Math.E,in*-1)) / (Math.pow(Math.E,in) + Math.pow(Math.E,in*-1));
+
+            case ReLU:
+                return in<=0 ? 0 : in;
+
+            case GELU:
+                return in/2 * (1+erf(in/Math.sqrt(2)));
+
+            case Softplus:
+                Math.log1p(Math.pow(Math.E,in));
+
             case ELU:
                 return in<=0 ? alpha*(Math.pow(Math.E,in)-1) : in;
 
             case SELU:
                 return in>=0 ? in : alpha*(Math.pow(Math.E,in)-1);
 
-            case ReLU:
+            case LeakyReLU:
                 return in<0 ? 0.01*in : in;
 
             case PReLU:
@@ -91,7 +105,6 @@ public class Neuron {
 
             case Gaussian:
                 return Math.pow(Math.E,-1*(in*in));
-            // Fabian Ende
 
             default:
                 return 0.0d;
@@ -124,4 +137,29 @@ public class Neuron {
         timesFired = 0;
         value = 0;
     }
+
+    // This is just an approximation! The source is: https://hewgill.com/picomath/java/Erf.java.html
+    private double erf(double x) {
+        // constants
+        final double a1 =  0.254829592;
+        final double a2 = -0.284496736;
+        final double a3 =  1.421413741;
+        final double a4 = -1.453152027;
+        final double a5 =  1.061405429;
+        final double p  =  0.3275911;
+
+        // Save the sign of x
+        double sign = 1;
+        if (x < 0) {
+            sign = -1;
+        }
+        x = Math.abs(x);
+
+        // A&S formula 7.1.26
+        double t = 1.0/(1.0 + p*x);
+        double y = 1.0 - (((((a5*t + a4)*t) + a3)*t + a2)*t + a1)*t*Math.exp(-x*x);
+
+        return sign*y;
+    }
+
 }
